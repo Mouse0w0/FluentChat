@@ -1,10 +1,7 @@
 package fluentchat.server;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -12,9 +9,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            ByteBuf buf = (ByteBuf) msg;
-            System.out.println(buf.toString(CharsetUtil.UTF_8));
-            ctx.writeAndFlush(Unpooled.copiedBuffer("Hello Client!".getBytes()));
+            System.out.println((String) msg);
+            ctx.writeAndFlush("Hello Client!");
         } finally {
             ReferenceCountUtil.release(msg);
         }
