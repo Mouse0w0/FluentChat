@@ -1,44 +1,25 @@
 package fluentchat.client;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import fluentchat.client.network.ClientNetwork;
+import fluentchat.client.ui.UIBootstrap;
+import javafx.application.Application;
 
 public class Client {
 
-    public static void main(String[] args) throws Exception {
-        EventLoopGroup group = new NioEventLoopGroup();
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(group)
-                .channel(NioSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .handler(new ChildChannelHandler());
-        try {
-            ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 8080).sync();
-            channelFuture.channel().closeFuture().sync();
-        } finally {
-            group.shutdownGracefully();
-        }
+    private static ClientNetwork network;
+
+    public static void main(String[] args) {
+        network = new ClientNetwork();
+        network.connect("127.0.0.1", 1080);
+        Application.launch(UIBootstrap.class, args);
     }
 
-    private static class ChildChannelHandler extends ChannelInitializer<SocketChannel> {
+    public static ClientNetwork getNetwork() {
+        return network;
+    }
 
-        @Override
-        protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-            ch.pipeline().addLast(new LengthFieldPrepender(4));
-            ch.pipeline().addLast(new StringDecoder());
-            ch.pipeline().addLast(new StringEncoder());
-            ch.pipeline().addLast(new ClientHandler());
-        }
+    public static void exit() {
+        network.disconnect();
+        UIBootstrap.getMainStage().close();
     }
 }
