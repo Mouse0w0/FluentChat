@@ -25,6 +25,8 @@ dependencies {
 
     compile 'org.fxmisc.richtext:richtextfx:0.10.1'
 
+    compile 'com.j256.ormlite:ormlite-jdbc:5.1'
+
     implementation 'org.slf4j:slf4j-simple:1.7.25'
     implementation 'net.sf.jopt-simple:jopt-simple:5.0.4'
     implementation 'org.xerial:sqlite-jdbc:3.27.2.1'
