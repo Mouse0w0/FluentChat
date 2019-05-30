@@ -4,10 +4,7 @@ import fluentchat.network.NetworkInboundHandler;
 import fluentchat.network.NetworkManager;
 import fluentchat.network.NetworkOutboundHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -20,10 +17,14 @@ public class ClientConnection {
     private final NetworkManager networkManager;
 
     private EventLoopGroup eventLoopGroup;
-    private ChannelFuture channelFuture;
+    private Channel channel;
 
     public ClientConnection(NetworkManager networkManager) {
         this.networkManager = networkManager;
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     public ChannelFuture connect(String address, int port) {
@@ -33,16 +34,17 @@ public class ClientConnection {
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ClientChannelInitializer());
-        channelFuture = bootstrap.connect(address, port);
+        var channelFuture = bootstrap.connect(address, port);
+        channel = channelFuture.channel();
         return channelFuture;
     }
 
     public void disconnect() {
-        if (eventLoopGroup == null)
+        if (channel == null)
             return;
 
         try {
-            channelFuture.channel().close().sync();
+            channel.close().sync();
         } catch (InterruptedException ignored) {
         } finally {
             eventLoopGroup.shutdownGracefully();

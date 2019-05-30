@@ -4,10 +4,7 @@ import fluentchat.network.NetworkInboundHandler;
 import fluentchat.network.NetworkManager;
 import fluentchat.network.NetworkOutboundHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -21,27 +18,35 @@ public class ServerConnection {
 
     private EventLoopGroup parentGroup;
     private EventLoopGroup childGroup;
-    private ChannelFuture channelFuture;
+    private Channel channel;
 
     public ServerConnection(NetworkManager networkManager) {
         this.networkManager = networkManager;
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
     public ChannelFuture listen(int port) {
         parentGroup = new NioEventLoopGroup();
         childGroup = new NioEventLoopGroup();
-        ServerBootstrap bootstrap = new ServerBootstrap();
+        var bootstrap = new ServerBootstrap();
         bootstrap.group(parentGroup, childGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childHandler(new ServerChannelInitializer());
-        channelFuture = bootstrap.bind(port);
+        var channelFuture = bootstrap.bind(port);
+        channel = channelFuture.channel();
         return channelFuture;
     }
 
-    public void close() throws InterruptedException {
+    public void close() {
+        if (channel == null)
+            return;
         try {
-            channelFuture.channel().close().sync();
+            channel.close().sync();
+        } catch (InterruptedException ignored) {
         } finally {
             parentGroup.shutdownGracefully();
             childGroup.shutdownGracefully();
