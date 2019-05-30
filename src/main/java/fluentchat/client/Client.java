@@ -10,7 +10,6 @@ public class Client {
 
     public static void main(String[] args) {
         network = new ClientNetwork();
-        network.connect("127.0.0.1", 1080);
         Application.launch(UIBootstrap.class, args);
     }
 
