@@ -3,6 +3,7 @@ package fluentchat.client;
 import fluentchat.client.network.ClientConnection;
 import fluentchat.client.ui.UIBootstrap;
 import fluentchat.network.NetworkManager;
+import fluentchat.network.message.LoginMessage;
 import javafx.application.Application;
 
 public class Client {
@@ -12,6 +13,7 @@ public class Client {
 
     public static void main(String[] args) {
         network = new NetworkManager();
+        network.register(LoginMessage.class, new LoginMessage.Serializer());
         connection = new ClientConnection(network);
         Application.launch(UIBootstrap.class, args);
     }

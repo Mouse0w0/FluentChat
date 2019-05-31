@@ -1,5 +1,7 @@
 package fluentchat.network;
 
+import io.netty.channel.Channel;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -9,7 +11,9 @@ public class NetworkManager {
     private final Map<Class<? extends Message>, RegisteredMessage<? extends Message>> registeredMessages = new HashMap<>();
     private final Map<Integer, RegisteredMessage<? extends Message>> idToMessage = new HashMap<>();
 
-    private int nextId;
+    private Channel channel;
+
+    private int nextId = 0;
 
     public <T extends Message> void register(Class<T> clazz, MessageSerializer<T> serializer) {
         register(clazz, serializer, null);

@@ -10,13 +10,13 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 
 public class ClientConnection {
 
     private final NetworkManager networkManager;
 
     private EventLoopGroup eventLoopGroup;
+    private ChannelFuture channelFuture;
     private Channel channel;
 
     public ClientConnection(NetworkManager networkManager) {
@@ -28,13 +28,16 @@ public class ClientConnection {
     }
 
     public ChannelFuture connect(String address, int port) {
+        if (channel != null && channel.isActive())
+            return channelFuture;
+
         eventLoopGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ClientChannelInitializer());
-        var channelFuture = bootstrap.connect(address, port);
+        channelFuture = bootstrap.connect(address, port);
         channel = channelFuture.channel();
         return channelFuture;
     }
@@ -57,7 +60,7 @@ public class ClientConnection {
         protected void initChannel(SocketChannel ch) throws Exception {
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
             ch.pipeline().addLast(new LengthFieldPrepender(4));
-            ch.pipeline().addLast(new ReadTimeoutHandler(50));
+//            ch.pipeline().addLast(new ReadTimeoutHandler(50));
             ch.pipeline().addLast(new NetworkInboundHandler(networkManager));
             ch.pipeline().addLast(new NetworkOutboundHandler(networkManager));
         }

@@ -1,7 +1,9 @@
 package fluentchat.server;
 
 import fluentchat.network.NetworkManager;
+import fluentchat.network.message.LoginMessage;
 import fluentchat.server.network.ServerConnection;
+import fluentchat.server.network.message.LoginMessageHandler;
 
 public class Server {
 
@@ -10,8 +12,9 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
         network = new NetworkManager();
+        network.register(LoginMessage.class, new LoginMessage.Serializer(), new LoginMessageHandler());
         connection = new ServerConnection(network);
-        connection.listen(8080);
+        connection.listen(8080).sync();
     }
 
     public static NetworkManager getNetwork() {

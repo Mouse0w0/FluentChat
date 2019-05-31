@@ -1,11 +1,10 @@
 package fluentchat.network;
 
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.MessageToByteEncoder;
 
-public class NetworkOutboundHandler extends ChannelOutboundHandlerAdapter {
+public class NetworkOutboundHandler extends MessageToByteEncoder<Message> {
 
     private final NetworkManager network;
 
@@ -14,12 +13,9 @@ public class NetworkOutboundHandler extends ChannelOutboundHandlerAdapter {
     }
 
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        Message message = (Message) msg;
-        var registeredMessage = network.getRegisteredMessage(message.getClass());
-        var buf = Unpooled.buffer();
-        buf.writeInt(registeredMessage.getId());
-        registeredMessage.write(buf, message);
-        ctx.write(buf, promise);
+    protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
+        var registeredMessage = network.getRegisteredMessage(msg.getClass());
+        out.writeInt(registeredMessage.getId());
+        registeredMessage.write(out, msg);
     }
 }

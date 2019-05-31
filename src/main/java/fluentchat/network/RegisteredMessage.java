@@ -24,9 +24,10 @@ public class RegisteredMessage<T extends Message> {
         return clazz;
     }
 
-    public void handle(ChannelHandlerContext ctx, Message message) {
-        if (handler != null)
-            handler.handle(ctx, (T) message);
+    public Message handle(ChannelHandlerContext ctx, Message message) {
+        if (handler == null)
+            throw new UnsupportedOperationException("Cannot handle this message");
+        return handler.handle(ctx, (T) message);
     }
 
     public T read(ByteBuf buf) {
