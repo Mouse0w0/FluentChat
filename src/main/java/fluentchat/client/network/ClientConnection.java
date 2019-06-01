@@ -1,5 +1,6 @@
 package fluentchat.client.network;
 
+import fluentchat.network.Message;
 import fluentchat.network.NetworkInboundHandler;
 import fluentchat.network.NetworkManager;
 import fluentchat.network.NetworkOutboundHandler;
@@ -52,6 +53,10 @@ public class ClientConnection {
         } finally {
             eventLoopGroup.shutdownGracefully();
         }
+    }
+
+    public void send(Message message) {
+        getChannel().writeAndFlush(message);
     }
 
     private class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {

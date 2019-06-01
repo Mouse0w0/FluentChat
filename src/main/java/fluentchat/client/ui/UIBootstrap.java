@@ -20,6 +20,7 @@ public class UIBootstrap extends Application {
         LoginUI loginUI = new LoginUI();
         primaryStage.setScene(new Scene(loginUI));
         primaryStage.setTitle("Fluent Chat");
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(event -> Client.exit());
         primaryStage.show();
     }

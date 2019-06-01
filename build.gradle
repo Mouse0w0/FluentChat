@@ -18,6 +18,7 @@ dependencies {
     compile 'com.google.guava:guava:27.0.1-jre'
     compile 'org.apache.commons:commons-lang3:3.8.1'
     compile 'commons-io:commons-io:2.6'
+    compile 'commons-codec:commons-codec:1.12'
 
     compile 'io.netty:netty-all:4.1.33.Final'
     compile 'com.google.code.gson:gson:2.8.5'

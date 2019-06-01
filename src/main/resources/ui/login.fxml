@@ -6,8 +6,8 @@
 <?import javafx.scene.text.Font?>
 <fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox spacing="10.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0"
-              AnchorPane.topAnchor="40.0">
+        <VBox prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0"
+              AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
             <children>
                 <Label text="FluentChat">
                     <font>
@@ -29,18 +29,19 @@
                         <TextField fx:id="username" GridPane.columnIndex="1"/>
                         <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                     </children>
-                </GridPane>
-                <FlowPane alignment="TOP_RIGHT" hgap="10.0" prefWrapLength="0.0">
-                    <children>
-                        <Button mnemonicParsing="false" onAction="#register" text="注册"/>
-                        <Button mnemonicParsing="false" onAction="#login" text="登录"/>
-                        <Button mnemonicParsing="false" onAction="#exit" text="退出"/>
-                    </children>
                     <VBox.margin>
-                        <Insets/>
+                        <Insets bottom="5.0" top="5.0"/>
                     </VBox.margin>
+                </GridPane>
+                <FlowPane alignment="TOP_RIGHT" prefWrapLength="0.0">
+                    <children>
+                        <Label fx:id="message"/>
+                    </children>
                 </FlowPane>
+                <Button mnemonicParsing="false" onAction="#login" prefHeight="23.0" prefWidth="200.0" text="登录"/>
             </children>
         </VBox>
+        <Hyperlink layoutY="206.0" onAction="#register" text="注册账号" AnchorPane.bottomAnchor="5.0"
+                   AnchorPane.leftAnchor="5.0"/>
     </children>
 </fx:root>
