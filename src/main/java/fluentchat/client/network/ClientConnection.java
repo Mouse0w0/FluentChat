@@ -29,8 +29,9 @@ public class ClientConnection {
     }
 
     public ChannelFuture connect(String address, int port) {
-        if (channel != null && channel.isActive())
-            return channelFuture;
+        if (channel != null) {
+            disconnect();
+        }
 
         eventLoopGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
