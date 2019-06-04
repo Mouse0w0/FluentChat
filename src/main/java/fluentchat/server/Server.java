@@ -7,16 +7,21 @@ import fluentchat.server.network.ServerConnection;
 import fluentchat.server.network.message.LoginMessageHandler;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Server {
 
     private static CommandManager commandManager;
     private static NetworkManager network;
     private static ServerConnection connection;
+    private static ScheduledExecutorService executor;
 
     private volatile static boolean stopped = false;
 
     public static void main(String[] args) throws Exception {
+        executor = Executors.newSingleThreadScheduledExecutor();
+
         commandManager = new CommandManager();
         commandManager.register("stop", $ -> {
             System.out.println("Stopping...");
@@ -43,8 +48,17 @@ public class Server {
         return connection;
     }
 
+    public static ScheduledExecutorService getExecutor() {
+        return executor;
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
+    }
+
     public static void exit() {
         stopped = true;
+        executor.shutdown();
         connection.close();
     }
 }

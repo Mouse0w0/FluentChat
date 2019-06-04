@@ -6,12 +6,17 @@ import fluentchat.network.NetworkManager;
 import fluentchat.network.message.LoginMessage;
 import javafx.application.Application;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 public class Client {
 
     private static NetworkManager network;
     private static ClientConnection connection;
+    private static ScheduledExecutorService executor;
 
     public static void main(String[] args) {
+        executor = Executors.newSingleThreadScheduledExecutor();
         network = new NetworkManager();
         network.register(LoginMessage.class, new LoginMessage.Serializer());
         connection = new ClientConnection(network);
@@ -26,7 +31,12 @@ public class Client {
         return connection;
     }
 
+    public static ScheduledExecutorService getExecutor() {
+        return executor;
+    }
+
     public static void exit() {
+        executor.shutdown();
         connection.disconnect();
         UIBootstrap.getMainStage().close();
     }
