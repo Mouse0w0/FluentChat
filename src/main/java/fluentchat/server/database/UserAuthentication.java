@@ -5,9 +5,10 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "user_authentications")
 public class UserAuthentication {
-    @DatabaseField(canBeNull = false, foreign = true)
-    private User user;
+    @DatabaseField(id = true)
+    public String username;
 
     @DatabaseField(canBeNull = false)
-    private String password;
+    public String password;
+
 }

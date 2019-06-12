@@ -2,6 +2,7 @@ package fluentchat.client.ui;
 
 import fluentchat.client.Client;
 import fluentchat.network.message.LoginMessage;
+import fluentchat.util.PasswordUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,12 +12,9 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString;
-import static org.apache.commons.codec.digest.DigestUtils.sha1;
-
 public class LoginUI extends AnchorPane {
 
-    private static final String OBSCURED_CODE = "FluentChat";
+
 
     @FXML
     private TextField username;
@@ -39,7 +37,7 @@ public class LoginUI extends AnchorPane {
                 Client.getConnection().connect("127.0.0.1", 8080).sync();
             } catch (InterruptedException ignored) {
             }
-            Client.getConnection().send(new LoginMessage(username.getText(), encodeBase64URLSafeString(sha1(password.getText() + OBSCURED_CODE))));
+            Client.getConnection().send(new LoginMessage(username.getText(), PasswordUtils.encode(password.getText())));
         });
     }
 

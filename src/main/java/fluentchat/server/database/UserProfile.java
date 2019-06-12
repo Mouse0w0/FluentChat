@@ -7,17 +7,17 @@ import com.j256.ormlite.table.DatabaseTable;
 public class UserProfile {
 
     @DatabaseField(canBeNull = false, foreign = true)
-    private User user;
+    public User user;
 
     @DatabaseField
-    private String nickname;
+    public String nickname;
 
     @DatabaseField
-    private String face;
+    public String face;
 
     @DatabaseField
-    private String bio;
+    public String bio;
 
     @DatabaseField
-    private String lastLoginTime;
+    public String lastLoginTime;
 }

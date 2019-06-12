@@ -26,7 +26,7 @@ public class RegisteredMessage<T extends Message> {
 
     public Message handle(ChannelHandlerContext ctx, Message message) {
         if (handler == null)
-            throw new UnsupportedOperationException("Cannot handle this message");
+            throw new UnsupportedOperationException(String.format("Cannot handle %s message.", message.getClass().getSimpleName()));
         return handler.handle(ctx, (T) message);
     }
 

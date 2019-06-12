@@ -11,6 +11,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 
+import javax.net.ssl.SSLContext;
+
 public class ServerConnection {
 
     private final NetworkManager networkManager;
@@ -56,11 +58,16 @@ public class ServerConnection {
 
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
+            var sslEngine = SSLContext.getDefault().createSSLEngine();
+            sslEngine.setUseClientMode(false);
+            sslEngine.setNeedClientAuth(true);
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
             ch.pipeline().addLast(new LengthFieldPrepender(4));
+            // TODO: SSL
+//            ch.pipeline().addLast("SSL", new SslHandler(sslEngine));
 //            ch.pipeline().addLast(new ReadTimeoutHandler(50));
-            ch.pipeline().addLast(new NetworkInboundHandler(networkManager));
             ch.pipeline().addLast(new NetworkOutboundHandler(networkManager));
+            ch.pipeline().addLast(new NetworkInboundHandler(networkManager));
         }
     }
 }

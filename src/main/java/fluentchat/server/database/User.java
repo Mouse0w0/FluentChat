@@ -6,33 +6,17 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "users")
 public class User {
 
-    @DatabaseField(generatedId = true, useGetSet = true)
-    private int id;
+    @DatabaseField(generatedId = true)
+    public int id;
 
-    @DatabaseField(canBeNull = false, useGetSet = true)
-    private String name;
+    @DatabaseField(canBeNull = false, unique = true)
+    public String username;
 
     public User() {
     }
 
-    public User(int id, String name) {
+    public User(int id, String username) {
         this.id = id;
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.username = username;
     }
 }

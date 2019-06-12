@@ -22,7 +22,7 @@ public class NetworkInboundHandler extends ChannelInboundHandlerAdapter {
             var message = registeredMessage.read(buf);
             Message response = registeredMessage.handle(ctx, message);
             if (response != null) {
-                ctx.writeAndFlush(message);
+                ctx.writeAndFlush(response);
             }
         } finally {
             ReferenceCountUtil.release(msg);

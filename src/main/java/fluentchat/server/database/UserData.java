@@ -1,15 +1,20 @@
 package fluentchat.server.database;
 
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "user_datas")
 public class UserData {
 
-    private User user;
+    @DatabaseField(foreign = true)
+    public User user;
 
-    private String registerTime;
+    @DatabaseField
+    public long registerTime;
 
-    private String friends;
+    @DatabaseField
+    public String friends;
 
-    private String groups;
+    @DatabaseField
+    public String groups;
 }
